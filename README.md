@@ -42,7 +42,7 @@ npm run typecheck
 - **Film.** The live hero plays the Coniston Showreel (Vimeo `1192228555`, 62 s, 4K). Vimeo's player cannot be reached from every network, so `scripts/film.py` documents fetching it from the player's HLS manifest (1080p + audio) and cuts the hero loop (to 54.4 s, before the end card), a phone encode, a poster frame and the full reel.
 - **Socials.** LinkedIn only (the live footer's single account), as the Simple Icons path in `lib/brand-icons.ts`.
 
-### Palette (proposed; not yet confirmed by the client)
+### Palette (confirmed 9 October 2026)
 
 | Token | Hex | Source |
 |---|---|---|
