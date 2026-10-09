@@ -136,8 +136,15 @@ html:not(.logo-landed) .header-logo { visibility: hidden; }
   display: flex; gap: 2px; padding: 5px; border-radius: 40px; background: var(--white); color: var(--navy);
   box-shadow: 0 6px 24px rgba(29, 43, 70, 0.08);
 }
-.header-pill a { padding: 9px 16px; border-radius: 30px; font-size: 15px; font-weight: 500; transition: background-color 0.3s; }
-.header-pill a:hover, .header-pill a:focus-visible { background: var(--stone); }
+.header-pill { position: relative; }
+.header-pill a { position: relative; z-index: 1; padding: 9px 16px; border-radius: 30px; font-size: 15px; font-weight: 500; }
+.header-pill a:focus-visible { outline-offset: -2px; }
+/* The sliding hover chip (SectionPill in Header.tsx): it glides and stretches between items on the expo curve */
+.pill-chip {
+  position: absolute; top: 5px; bottom: 5px; left: 0; width: 0; border-radius: 30px; background: var(--stone);
+  opacity: 0; pointer-events: none; will-change: transform, width;
+  transition: transform 0.55s var(--ease-out), width 0.55s var(--ease-out), opacity 0.3s;
+}
 .header-right { justify-self: end; display: flex; align-items: center; gap: 22px; }
 .header-call { font-size: 15px; font-weight: 500; }
 .menu-toggle {

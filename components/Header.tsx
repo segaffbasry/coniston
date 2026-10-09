@@ -79,6 +79,51 @@ function Menu({ open, close }: { open: boolean; close: () => void }) {
   );
 }
 
+/* The section links in the header pill. One Stone chip sits behind them and glides from item to item as the pointer
+   (or keyboard focus) moves along the pill, stretching to each item's width, so the hover slides left and right
+   rather than jumping. While the pointer rests on an item the chip leans a little towards it (a magnetic pull of
+   20% of the pointer's offset from the item's centre). Entering the pill from outside, the chip fades in where the
+   pointer is instead of sliding in from the last spot; leaving, it fades out in place. */
+function SectionPill() {
+  const nav = useRef<HTMLElement>(null);
+  const chip = useRef<HTMLSpanElement>(null);
+  const shown = useRef(false);
+
+  const place = (link: HTMLElement, pull = 0) => {
+    const c = chip.current; if (!c) return;
+    const x = link.offsetLeft + pull, w = link.offsetWidth;
+    if (!shown.current) {
+      // Appear in place: no slide from wherever the chip was last time.
+      c.style.transition = "none";
+      c.style.transform = `translateX(${x}px)`;
+      c.style.width = `${w}px`;
+      void c.offsetWidth;
+      c.style.transition = "";
+      shown.current = true;
+    }
+    c.style.transform = `translateX(${x}px)`;
+    c.style.width = `${w}px`;
+    c.style.opacity = "1";
+  };
+  const hide = () => { shown.current = false; if (chip.current) chip.current.style.opacity = "0"; };
+  const target = (e: React.SyntheticEvent) => (e.target as Element).closest<HTMLElement>("a");
+
+  return (
+    <nav className="header-pill" aria-label="Sections" ref={nav}
+      onPointerMove={(e) => {
+        const a = target(e); if (!a) return;
+        const r = a.getBoundingClientRect();
+        place(a, reducedMotion() ? 0 : (e.clientX - (r.left + r.width / 2)) * 0.2);
+      }}
+      onPointerLeave={hide}
+      onFocus={(e) => { const a = target(e); if (a?.matches(":focus-visible")) place(a); }}
+      onBlur={(e) => { if (!nav.current?.contains(e.relatedTarget as Node)) hide(); }}>
+      <span className="pill-chip" ref={chip} aria-hidden="true" />
+      {sectionLinks.map((s) => <a key={s.href} href={s.href}>{s.label}</a>)}
+    </nav>
+  );
+}
+
 /* After quintadamalia.com's header: the logo on the left, the sections in a floating white pill in the middle, and
    (in place of Quinta's social buttons) the Menu toggle on the right. No bar behind it. The logo and toggle take
    their colour from the ground under them (sections declare data-tone="dark"); the whole header slides away on the
@@ -121,9 +166,7 @@ export function Header() {
     <>
       <header className={`site-header ${dark ? "on-dark" : "on-light"}${entered ? " is-in" : ""}${open ? " is-open" : ""}`} ref={bar}>
         <a href="#top" className="header-logo" aria-label="Coniston, back to the top"><Logo id="hd" title="" /></a>
-        <nav className="header-pill" aria-label="Sections">
-          {sectionLinks.map((s) => <a key={s.href} href={s.href}>{s.label}</a>)}
-        </nav>
+        <SectionPill />
         <div className="header-right">
           <a className="header-call" href={contact.phone.href}>{contact.phone.label}</a>
           <button ref={toggle} className="menu-toggle" aria-expanded={open} aria-controls="site-menu" onClick={() => (open ? close() : setOpen(true))}>
