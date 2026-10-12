@@ -246,12 +246,21 @@ html:not(.logo-landed) .header-logo { visibility: hidden; }
 .about-line { color: var(--ink-soft); font-size: 16px; margin-bottom: 6px; }
 .trust { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px 48px; margin-top: clamp(48px, 6vw, 72px); padding-top: 36px; border-top: 1px solid var(--line); }
 .trust-line { font-size: 16px; color: var(--ink-soft); max-width: 14em; }
-.trust-logos { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 36px; }
+.trust-marquee {
+  min-width: 0; overflow: hidden;
+  /* the logos fade in and out at the edges rather than being cut */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+@keyframes trust-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.trust-track { display: flex; width: max-content; animation: trust-scroll 38s linear infinite; }
+.trust-marquee:hover .trust-track { animation-play-state: paused; }
+/* Each copy carries its own trailing gap, so the two halves are identical and -50% lands exactly on the seam */
+.trust-logos { display: flex; flex: none; align-items: center; gap: 72px; padding-right: 72px; }
 /* Optical sizing: every logo gets about the same area, whatever its proportions */
 .trust-logos img { height: calc(68px / sqrt(var(--ar))); width: auto; max-width: 170px; filter: grayscale(1); opacity: 0.78; mix-blend-mode: multiply; }
 @media (max-width: 1023px) {
   .trust { grid-template-columns: 1fr; }
-  .trust-logos { justify-content: flex-start; }
 }
 /* Phones: the three cards become a swipeable strip instead of three stacked photographs */
 @media (max-width: 599px) {
@@ -260,7 +269,8 @@ html:not(.logo-landed) .header-logo { visibility: hidden; }
   .about-cards > li { flex: 0 0 74vw; scroll-snap-align: start; }
 }
 @media (max-width: 767px) {
-  .trust-logos { gap: 20px 28px; }
+  .trust-logos { gap: 48px; padding-right: 48px; }
+  .trust-track { animation-duration: 28s; }
 }
 
 /* ---------------------------------------------------------------- shared section head */
@@ -420,4 +430,9 @@ html:not(.logo-landed) .header-logo { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
   .work-item { transition: none; }
+  /* Reduced motion: no marquee; one copy, wrapped, all logos visible */
+  .trust-marquee { -webkit-mask-image: none; mask-image: none; }
+  .trust-track { animation: none; width: auto; }
+  .trust-logos { flex-wrap: wrap; gap: 24px 40px; padding-right: 0; }
+  .trust-logos[aria-hidden] { display: none; }
 }

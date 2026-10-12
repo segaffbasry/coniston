@@ -138,7 +138,7 @@ The one deliberate change is the seal. Quinta's scalloped rosette is replaced by
 
 ### Other sections
 
-- **About**: Somerstone's About layout. The statement, three photo cards, then the framework client logos, sized so each covers about the same area whatever its proportions.
+- **About**: Somerstone's About layout. The statement, three photo cards, then the framework client logos as a slow, endless marquee (client feedback, 11 October: "can this be scrolling?"). Each logo is sized to cover about the same area whatever its proportions. The list is drawn twice and the track moves by exactly one copy, so the loop has no seam. It runs at about 30 px/s, fades in and out at the edges, pauses on hover, and stands still (wrapped, one copy) with reduced motion.
 - **Work**: five tall photographs in a row. Pointing at one, or tabbing to it, widens it (flex-grow, 0.9 s expo) and shows the title, standfirst and facts under the picture, never over it. On phones it becomes a swipeable strip with every caption showing.
 - **Voices**: the quote beside a photo of its building. The names are tabs (arrow keys move between them), and quote and photo cross-fade. All three quotes share one grid cell, so nothing below jumps. Nothing advances on its own.
 - **What we do**: the live title, paragraphs and two tiles, then three rows that reveal their service page's photo on hover or focus.
